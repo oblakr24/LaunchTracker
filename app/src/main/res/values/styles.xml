@@ -1,0 +1,42 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimary">@color/app_primary</item>
+        <!-- darker variant for the status bar and contextual app bars -->
+        <item name="colorPrimaryDark">@color/app_primary_dark</item>
+        <!-- theme UI controls like checkboxes and text fields -->
+        <item name="colorAccent">@color/gray_light</item>
+
+        <item name="android:textColor">@android:color/black</item>
+
+        <item name="android:windowBackground">@color/gray_very_light</item>
+        <item name="android:background">@android:color/transparent</item>
+
+        <!-- Spinner style -->
+        <item name="android:spinnerStyle">@style/AppTheme.spinnerStyle</item>
+        <!-- Spinner dropdown style-->
+        <item name="android:spinnerDropDownItemStyle">@style/AppTheme.spinnerDropDownItemStyle</item>
+
+    </style>
+
+    <style name="AppTheme.NoActionBar">
+        <item name="windowActionBar">false</item>
+        <item name="windowNoTitle">true</item>
+    </style>
+
+
+    <style name="AppTheme.AppBarOverlay" parent="ThemeOverlay.AppCompat.Dark.ActionBar" />
+
+    <style name="ToolbarTheme" parent="ThemeOverlay.AppCompat.Dark.ActionBar">
+        <item name="maxButtonHeight">?attr/actionBarSize</item>
+    </style>
+
+    <style name="AppTheme.spinnerStyle" parent="@android:style/Widget.Material.Light.Spinner">
+        <item name="android:background">@color/app_bg</item>
+    </style>
+    <style name="AppTheme.spinnerDropDownItemStyle" parent="@android:style/Widget.Material.DropDownItem.Spinner">
+        <item name="android:background">@color/gray_light</item>
+    </style>
+
+</resources>
