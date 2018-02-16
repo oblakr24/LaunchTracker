@@ -1,0 +1,66 @@
+apply plugin: 'com.android.application'
+apply plugin: 'kotlin-android'
+
+android {
+    compileSdkVersion 27
+    buildToolsVersion '27.0.3'
+    defaultConfig {
+        applicationId "oblak.r.launchtracker_prod"
+        minSdkVersion 21
+        targetSdkVersion 27
+        versionCode 1
+        versionName "1.0"
+        testInstrumentationRunner "android.support.test.runner.AndroidJUnitRunner"
+    }
+    buildTypes {
+        release {
+            minifyEnabled false
+        }
+    }
+
+//    sourceSets {
+//        main.java.srcDirs += 'src/main/kotlin'
+//    }
+
+    /* to prevent Dagger build errors */
+    kapt {
+        generateStubs = true
+    }
+}
+
+dependencies {
+    implementation project(":launchtracker_base")
+    testImplementation project(":launchtracker_base")
+
+    // RxJava & RxAndroid
+    implementation 'io.reactivex.rxjava2:rxandroid:2.0.2'
+    implementation 'io.reactivex.rxjava2:rxjava:2.1.9'
+    implementation "org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version"
+
+
+    implementation 'com.squareup.okhttp3:logging-interceptor:3.9.1'
+
+    // ViewModel and LiveData
+    implementation "android.arch.lifecycle:extensions:1.1.0"
+
+    /* Android support libraries */
+    implementation 'com.android.support:appcompat-v7:27.0.2'
+    implementation 'com.android.support:design:27.0.2'
+    implementation 'com.android.support:recyclerview-v7:27.0.2'
+
+    /* Dagger 2 */
+    implementation 'com.google.dagger:dagger:2.9'
+    kapt 'com.google.dagger:dagger-compiler:2.9'
+    kaptAndroidTest 'com.google.dagger:dagger-compiler:2.9'
+    compileOnly 'javax.annotation:jsr250-api:1.0'
+
+    // Retrofit
+    implementation 'com.squareup.retrofit2:retrofit:2.3.0'
+    implementation 'com.squareup.retrofit2:converter-moshi:2.3.0'
+    implementation 'com.squareup.retrofit2:adapter-rxjava2:2.3.0'
+}
+repositories {
+    mavenCentral()
+}
+
+apply plugin: 'kotlin-kapt'

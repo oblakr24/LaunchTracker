@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <color name="app_bg">@android:color/white</color>
+    <color name="app_bg_navbar">#F0EFEF</color>
+
+    <color name="app_primary">#ff6f00</color>
+    <color name="app_primary_dark">#d95300</color>
+    <color name="app_secondary">#9A9A9A</color>
+    <color name="app_tertiary">#BFBFBF</color>
+    <color name="app_tertiary_dark">#AFAFAF</color>
+
+    <color name="app_match_cell_border">#EFEFEF</color>
+    <color name="app_tournament_cell">#DADADA</color>
+
+    <color name="app_text">@android:color/black</color>
+    <color name="app_text_titlebar">#4B4A4D</color>
+
+    <color name="app_footer_gray">#585858</color>
+    <color name="app_gray_transparent">#0f565656</color>
+    <color name="gray_almost_very_light">#E4E5E6</color>
+    <color name="gray_very_light">#F1F2F3</color>
+    <color name="gray_very_very_light">#f4f4f4</color>
+    <color name="gray_light">#c4c4c4</color>
+    <color name="gray_dark">#666666</color>
+    <color name="gray">#787878</color>
+    <color name="black">#000000</color>
+    <color name="white">#ffffff</color>
+
+</resources>

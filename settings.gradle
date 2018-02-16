@@ -1,1 +1,1 @@
-include ':app'
+include ':launchtracker_prod', ':launchtracker_base', ':launchtrackerdev'

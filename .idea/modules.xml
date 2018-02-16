@@ -3,7 +3,9 @@
   <component name="ProjectModuleManager">
     <modules>
       <module fileurl="file://$PROJECT_DIR$/LaunchTracker.iml" filepath="$PROJECT_DIR$/LaunchTracker.iml" />
-      <module fileurl="file://$PROJECT_DIR$/app/app.iml" filepath="$PROJECT_DIR$/app/app.iml" />
+      <module fileurl="file://$PROJECT_DIR$/launchtracker_base/launchtracker_base.iml" filepath="$PROJECT_DIR$/launchtracker_base/launchtracker_base.iml" />
+      <module fileurl="file://$PROJECT_DIR$/launchtracker_prod/launchtracker_prod.iml" filepath="$PROJECT_DIR$/launchtracker_prod/launchtracker_prod.iml" />
+      <module fileurl="file://$PROJECT_DIR$/launchtrackerdev/launchtrackerdev.iml" filepath="$PROJECT_DIR$/launchtrackerdev/launchtrackerdev.iml" />
     </modules>
   </component>
 </project>
