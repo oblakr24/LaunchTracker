@@ -8,6 +8,7 @@ import oblak.r.baseapp.base.ViewModelWithService
 import oblak.r.baseapp.models.Launch
 import oblak.r.baseapp.models.LaunchesResponse
 import oblak.r.baseapp.models.Rocket
+import oblak.r.baseapp.utils.ModelConsts
 
 /**
  * A view model used by views displaying launches' related data
@@ -21,7 +22,7 @@ class LaunchesViewModel(app: Application) : ViewModelWithService(app) {
                 .doOnEach { LaunchesObservablesData.newLaunchesReady.onNext(false) }
                 .flatMap {
             // get the rocket details to get the rocket family name
-            service.getNextLaunches(LaunchesObservablesData.maxNextLaunches, it.familyName)
+            service.getNextLaunches(LaunchesObservablesData.maxNextLaunches, it.familyName.takeIf { it != ModelConsts.allRocketObj.familyName })
                     .onErrorReturn { LaunchesResponse(emptyList()) }
                     .map { it.launches }
 
@@ -30,7 +31,7 @@ class LaunchesViewModel(app: Application) : ViewModelWithService(app) {
     }
 
     fun getRockets(): Observable<List<DisplayableRocket>> {
-        return service.getRockets().map { listOf(LaunchesObservablesData.allRocketObj)
+        return service.getRockets().map { listOf(ModelConsts.allRocketObj)
                 .plus(it.rockets?.map { it.toDisplayable() }?.distinct() ?: emptyList()) }
     }
 
@@ -42,21 +43,19 @@ class LaunchesViewModel(app: Application) : ViewModelWithService(app) {
 
     /**
      * This singleton ensures the same observable instances are available to all ViewModel instances
-     * Private so that only instances of this view model can hold references to it
+     * It's private so that only instances of this view model can hold references to it
      * so that is gets destroyed by the GC when all instances are destroyed
      */
     private object LaunchesObservablesData {
-        const val maxNextLaunches = 25
-        // dummy data for when no rockets are selected
-        val allRocketObj = DisplayableRocket(-1, "/")
+        const val maxNextLaunches = 30
 
         val selectedRocket: BehaviorSubject<DisplayableRocket> = BehaviorSubject.create<DisplayableRocket>()
         val newLaunchesReady: BehaviorSubject<Boolean> = BehaviorSubject.create()
     }
 
-    private fun Rocket.toDisplayable() = DisplayableRocket(id, family?.name ?: "-")
+    private fun Rocket.toDisplayable() = DisplayableRocket(family?.name ?: "-")
 }
 
-data class DisplayableRocket(val id: Int, val familyName: String) {
+data class DisplayableRocket(val familyName: String) {
     override fun toString(): String = familyName
 }

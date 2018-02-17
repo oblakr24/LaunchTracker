@@ -59,6 +59,12 @@ abstract class AbstractBasicAdapter<out TViewHolder : BaseViewHolder<TData>, TDa
         notifyDataSetChanged()
     }
 
+    fun addItems(newItems: List<TData>) {
+        val startIdx = items.size
+        items.addAll(newItems)
+        notifyItemRangeInserted(startIdx, items.size)
+    }
+
     fun clear() {
         items.clear()
         notifyDataSetChanged()

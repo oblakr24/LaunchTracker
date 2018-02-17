@@ -30,7 +30,6 @@ class Launch(
      * Helper
      */
     fun getDescription(): String = missions?.firstOrNull()?.description ?: "-"
-
 }
 
 class Mission(

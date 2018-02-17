@@ -9,6 +9,7 @@ import oblak.r.baseapp.models.Launch
 import oblak.r.baseapp.utils.ModelConsts
 import oblak.r.launchtracker.base.R
 import org.jetbrains.anko.find
+import java.util.*
 
 /**
  * Displays a single launch item
@@ -27,6 +28,12 @@ class LaunchViewHolder(view: View) : BaseViewHolder<Launch>(view) {
         titleText.text = data.name
         descText.text = data.getDescription()
 
-        dateText.text = ModelConsts.format(data.net)
+        // check if less than 30 days
+        val netDate = ModelConsts.parseLaunchDate(data.net)
+        dateText.text = if (Date().time + 30 * 24 * 3600 * 1000L < netDate.time) {
+            ModelConsts.formatLaunchDate(netDate)
+        } else {
+            ModelConsts.formatToRemaining(netDate)
+        }
     }
 }

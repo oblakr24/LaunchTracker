@@ -3,6 +3,7 @@ package oblak.r.launchtrackerdev.network
 import io.reactivex.Observable
 import oblak.r.baseapp.models.*
 import oblak.r.baseapp.network.TrackerService
+import oblak.r.baseapp.utils.ModelConsts
 
 
 object MockTrackerService : TrackerService {
@@ -36,8 +37,8 @@ object MockTrackerService : TrackerService {
         return Observable.just(LaunchesResponse(mockedLaunches))
     }
 
-    override fun getNextLaunches(count: Int, name: String): Observable<LaunchesResponse> {
-        return Observable.just(LaunchesResponse(mockedLaunches.filter { name.isBlank() || name == "/" || it.rocket.name.contains(name) }.take(count)))
+    override fun getNextLaunches(count: Int, name: String?): Observable<LaunchesResponse> {
+        return Observable.just(LaunchesResponse(mockedLaunches.filter { name.isNullOrBlank() || name == ModelConsts.allRocketObj.familyName || it.rocket.name.contains(name ?: "") }.take(count)))
     }
 
     override fun getRockets(): Observable<RocketsResponse> {

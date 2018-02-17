@@ -17,7 +17,7 @@ interface TrackerService {
 
     @GET("launch/next/{count}")
     fun getNextLaunches(@Path("count") count: Int,
-                        @Query("name") name: String = ""): Observable<LaunchesResponse>
+                        @Query("name") name: String? = ""): Observable<LaunchesResponse>
 
     @GET("rocket/")
     fun getRockets(): Observable<RocketsResponse>

@@ -1,22 +1,32 @@
 package oblak.r.baseapp.utils
 
+import oblak.r.baseapp.main.DisplayableRocket
 import java.text.SimpleDateFormat
 import java.util.*
 
 
 object ModelConsts {
-    const val inputDateFormat: String = "MMMMM d, yyyy HH:mm:ss z"
-    const val outputDateFormat: String = "yyyy.MM.dd G 'at' HH:mm:ss z"
-    const val countDownFormat: String = "dd'd' hh'h' mm'min' ss's'"
 
+    private const val inputDateFormat: String = "MMMMM d, yyyy HH:mm:ss z"
+    private const val outputDateFormat: String = "YYYY.MM.dd"
+    private const val shortCountDownFormat: String = "d'd' h'h' mm'min' ss's'"
 
-    val launchDateFormat = SimpleDateFormat(inputDateFormat, Locale.getDefault())
+    // dummy data for when no rockets are selected
+    val allRocketObj = DisplayableRocket("All")
 
-    val launchDateFormatOut = SimpleDateFormat(countDownFormat, Locale.getDefault())
+    private val parsedLaunchFormat = SimpleDateFormat(inputDateFormat, Locale.getDefault())
 
-    fun parseDate(dateString: String) = launchDateFormat.parse(dateString)
+    private val countDownFormat = SimpleDateFormat(shortCountDownFormat, Locale.getDefault())
 
-    fun remainingDate(dateString: String) =  Date(parseDate(dateString).time - Date().time)
+    private val formattedLaunchFormat = SimpleDateFormat(outputDateFormat, Locale.getDefault())
 
-    fun format(dateString: String) = launchDateFormatOut.format(remainingDate(dateString))
+    fun parseLaunchDate(dateString: String) = parsedLaunchFormat.parse(dateString)
+
+    fun formatLaunchDate(date: Date) = formattedLaunchFormat.format(date)
+
+    fun remainingDate(dateString: String) =  Date(parseLaunchDate(dateString).time - Date().time)
+
+    fun formatToRemaining(dateString: String) = countDownFormat.format(remainingDate(dateString))
+
+    fun formatToRemaining(date: Date) = countDownFormat.format(Date(date.time - Date().time))
 }
