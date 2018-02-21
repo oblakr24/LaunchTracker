@@ -4,6 +4,7 @@ import dagger.Module
 import dagger.Provides
 import io.reactivex.schedulers.Schedulers
 import oblak.r.baseapp.BaseApp
+import oblak.r.baseapp.network.BaseDataModule
 import oblak.r.baseapp.network.TrackerService
 import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
@@ -13,11 +14,12 @@ import retrofit2.converter.moshi.MoshiConverterFactory
 import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
+
 /**
  * Created by rokoblak on 2/17/17.
  */
 @Module
-class DataModule(private val baseUrl: String, private val application: BaseApp) {
+class DataModule(private val baseUrl: String, application: BaseApp) : BaseDataModule(application) {
 
     @Provides
     @Singleton
@@ -44,12 +46,6 @@ class DataModule(private val baseUrl: String, private val application: BaseApp) 
                 .addConverterFactory(MoshiConverterFactory.create())
                 .addCallAdapterFactory(RxJava2CallAdapterFactory.createWithScheduler(Schedulers.io()))
                 .build()
-    }
-
-    @Provides
-    @Singleton
-    internal fun providesApplication(): BaseApp {
-        return application
     }
 
     @Provides

@@ -57,14 +57,10 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
     override fun requestData() {
         // observer the launches
         compositeDisposable += viewModel.getLaunches()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { resetAdapter(it) }
 
         // observe the readiness state
         compositeDisposable += viewModel.getLaunchesState()
-                .subscribeOn(Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread())
                 .subscribe { ready ->
                     if (!ready) {
                         showLoading()

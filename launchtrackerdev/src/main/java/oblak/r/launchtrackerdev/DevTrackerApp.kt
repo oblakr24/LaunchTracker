@@ -11,7 +11,7 @@ class DevTrackerApp : BaseApp() {
         super.onCreate()
 
         trackerComponent = DaggerTestTrackerComponent.builder()
-                .testDataModule(TestDataModule())
+                .testDataModule(TestDataModule(this))
                 .build()
     }
 }

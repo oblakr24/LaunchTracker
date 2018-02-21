@@ -45,8 +45,6 @@ class LaunchesActivity : BaseActivity<LaunchesViewModel>() {
     }
 
     override fun requestData() {
-        compositeDisposable += viewModel.getRockets()
-                .subscribeOn(io.reactivex.schedulers.Schedulers.computation())
-                .observeOn(AndroidSchedulers.mainThread()).subscribe { initSpinner(it) }
+        compositeDisposable += viewModel.getRockets().subscribe { initSpinner(it) }
     }
 }

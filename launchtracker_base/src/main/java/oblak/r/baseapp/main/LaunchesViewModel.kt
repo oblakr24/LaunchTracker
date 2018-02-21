@@ -2,6 +2,7 @@ package oblak.r.baseapp.main
 
 import android.app.Application
 import io.reactivex.Observable
+import io.reactivex.android.schedulers.AndroidSchedulers
 import io.reactivex.schedulers.Schedulers
 import io.reactivex.subjects.BehaviorSubject
 import oblak.r.baseapp.base.ViewModelWithService
@@ -15,42 +16,40 @@ import oblak.r.baseapp.utils.ModelConsts
  */
 class LaunchesViewModel(app: Application) : ViewModelWithService(app) {
 
+    private val maxNextLaunches = 30
+    private val selectedRocket: BehaviorSubject<DisplayableRocket> = BehaviorSubject.create<DisplayableRocket>()
+    private val newLaunchesReady: BehaviorSubject<Boolean> = BehaviorSubject.create()
+
     fun getLaunches(): Observable<List<Launch>> {
         // observe the selected rocket
-        return LaunchesObservablesData.selectedRocket
+        return selectedRocket
                 .observeOn(Schedulers.computation())
-                .doOnEach { LaunchesObservablesData.newLaunchesReady.onNext(false) }
+                .doOnEach { newLaunchesReady.onNext(false) }
                 .flatMap {
             // get the rocket details to get the rocket family name
-            service.getNextLaunches(LaunchesObservablesData.maxNextLaunches, it.familyName.takeIf { it != ModelConsts.allRocketObj.familyName })
+            service.getNextLaunches(maxNextLaunches, it.familyName.takeIf { it != ModelConsts.allRocketObj.familyName })
                     .onErrorReturn { LaunchesResponse(emptyList()) }
                     .map { it.launches }
 
-            }.doOnNext { LaunchesObservablesData.newLaunchesReady.onNext(true) }
+            }.doOnNext { newLaunchesReady.onNext(true) }
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
 
     }
 
     fun getRockets(): Observable<List<DisplayableRocket>> {
         return service.getRockets().map { listOf(ModelConsts.allRocketObj)
                 .plus(it.rockets?.map { it.toDisplayable() }?.distinct() ?: emptyList()) }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
-    fun getLaunchesState(): Observable<Boolean>  = LaunchesObservablesData.newLaunchesReady
+    fun getLaunchesState(): Observable<Boolean>  = newLaunchesReady
+            .subscribeOn(Schedulers.computation())
+            .observeOn(AndroidSchedulers.mainThread())
 
     fun setSelectedRocket(rocket: DisplayableRocket) {
-        LaunchesObservablesData.selectedRocket.onNext(rocket)
-    }
-
-    /**
-     * This singleton ensures the same observable instances are available to all ViewModel instances
-     * It's private so that only instances of this view model can hold references to it
-     * so that is gets destroyed by the GC when all instances are destroyed
-     */
-    private object LaunchesObservablesData {
-        const val maxNextLaunches = 30
-
-        val selectedRocket: BehaviorSubject<DisplayableRocket> = BehaviorSubject.create<DisplayableRocket>()
-        val newLaunchesReady: BehaviorSubject<Boolean> = BehaviorSubject.create()
+        selectedRocket.onNext(rocket)
     }
 
     private fun Rocket.toDisplayable() = DisplayableRocket(family?.name ?: "-")

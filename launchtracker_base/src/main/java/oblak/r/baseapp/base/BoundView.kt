@@ -1,6 +1,7 @@
 package oblak.r.baseapp.base
 
 import android.arch.lifecycle.AndroidViewModel
+import android.arch.lifecycle.ViewModelProvider
 import io.reactivex.disposables.CompositeDisposable
 import io.reactivex.disposables.Disposable
 
@@ -14,6 +15,8 @@ interface BoundView<VM: AndroidViewModel> {
     val viewModelClass: Class<VM>
 
     val compositeDisposable: CompositeDisposable
+
+    val viewModelFactory: ViewModelProvider.Factory
 
     /**
      * Any observables should be added to the composite disposable here

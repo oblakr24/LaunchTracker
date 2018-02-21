@@ -1,5 +1,8 @@
 package oblak.r.baseapp.network
 
+import android.arch.lifecycle.AndroidViewModel
+import oblak.r.baseapp.base.BaseActivity
+import oblak.r.baseapp.base.BaseFragment
 import oblak.r.baseapp.base.ViewModelWithService
 
 
@@ -8,4 +11,6 @@ import oblak.r.baseapp.base.ViewModelWithService
  */
 interface BaseTrackerComponent {
     fun inject(viewModel: ViewModelWithService)
+    fun inject(activity: BaseActivity<AndroidViewModel>)
+    fun inject(activity: BaseFragment<AndroidViewModel>)
 }
