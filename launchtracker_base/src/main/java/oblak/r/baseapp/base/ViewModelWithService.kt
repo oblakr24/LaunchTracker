@@ -16,6 +16,6 @@ abstract class ViewModelWithService(app: Application) : AndroidViewModel(app) {
     lateinit var service: TrackerService
 
     init {
-        getApplication<BaseApp>().trackerComponent.inject(this)
+        this.getApplication<BaseApp>().trackerComponent.inject(this)
     }
 }

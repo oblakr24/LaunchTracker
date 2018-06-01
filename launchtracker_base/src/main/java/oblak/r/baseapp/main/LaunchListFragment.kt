@@ -2,15 +2,14 @@ package oblak.r.baseapp.main
 
 import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
-import io.reactivex.android.schedulers.AndroidSchedulers
-import io.reactivex.schedulers.Schedulers
+import com.mikepenz.fastadapter.FastAdapter
+import com.mikepenz.fastadapter.IAdapter
+import com.mikepenz.fastadapter.IItem
+import com.mikepenz.fastadapter.adapters.ItemAdapter
 import oblak.r.baseapp.base.BaseFragment
-import oblak.r.baseapp.base.BasicAdapter
-import oblak.r.baseapp.extensions.inflateChild
 import oblak.r.baseapp.models.Launch
 import oblak.r.launchtracker.base.R
 import org.jetbrains.anko.find
-import org.jetbrains.anko.support.v4.toast
 import java.util.*
 
 /**
@@ -28,15 +27,9 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
 
     private var timerTask: TimerTask? = null
 
-    private val adapter by lazy {
-        BasicAdapter({ parent, _ ->
-            LaunchViewHolder(parent.inflateChild(R.layout.item_launch))
-        }).apply {
-            onItemClicked = { data, _, _ ->
-                toast("Details coming soon")
-            }
-        }
-    }
+    private val itemAdapter by lazy { ItemAdapter<LaunchItem>() }
+
+    private val adapter by lazy { FastAdapter.with<IItem<*, *>, IAdapter<out IItem<*, *>>>(itemAdapter) }
 
     override fun initUI() {
         super.initUI()
@@ -74,7 +67,9 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
     }
 
     private fun resetAdapter(items: List<Launch>) {
-        adapter.setNewItems(items)
+
+        itemAdapter.set(items.map { LaunchItem(it) })
+
         if (items.isEmpty()) {
             showEmpty("No launches available")
         } else {

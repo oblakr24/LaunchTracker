@@ -3,7 +3,6 @@ package oblak.r.launchtrackerdev
 import android.support.test.espresso.Espresso.onData
 import android.support.test.espresso.Espresso.onView
 import android.support.test.filters.LargeTest
-import android.support.test.rule.ActivityTestRule
 import android.support.test.runner.AndroidJUnit4
 import oblak.r.baseapp.main.LaunchesActivity
 import org.junit.Rule
@@ -11,6 +10,7 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import android.support.test.espresso.action.ViewActions.click
 import android.support.test.espresso.matcher.ViewMatchers.*
+import android.support.test.rule.ActivityTestRule
 import oblak.r.baseapp.main.DisplayableRocket
 import oblak.r.launchtrackerdev.TestUtils.withCount
 import org.hamcrest.CoreMatchers.*
