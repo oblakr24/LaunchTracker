@@ -17,6 +17,7 @@ interface TrackerService {
 
     @GET("launch/next/{count}")
     fun getNextLaunches(@Path("count") count: Int,
+                        @Query("offset") offset: Int,
                         @Query("name") name: String? = ""): Observable<LaunchesResponse>
 
     @GET("rocket/")

@@ -37,8 +37,12 @@ object MockTrackerService : TrackerService {
         return Observable.just(LaunchesResponse(mockedLaunches))
     }
 
-    override fun getNextLaunches(count: Int, name: String?): Observable<LaunchesResponse> {
-        return Observable.just(LaunchesResponse(mockedLaunches.filter { name.isNullOrBlank() || name == ModelConsts.allRocketObj.familyName || it.rocket.name.contains(name ?: "") }.take(count)))
+    override fun getNextLaunches(count: Int, offset: Int, name: String?): Observable<LaunchesResponse> {
+        return Observable.just(LaunchesResponse(mockedLaunches.filter {
+            name.isNullOrBlank()
+                    || name == ModelConsts.allRocketObj.familyName
+                    || it.rocket?.name?.contains(name ?: "") ?: false
+        }.take(count)))
     }
 
     override fun getRockets(): Observable<RocketsResponse> {

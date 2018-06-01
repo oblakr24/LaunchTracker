@@ -32,14 +32,14 @@ class LaunchItem(private val launch: Launch) : AbstractItem<LaunchItem, LaunchIt
 
             val data = item.launch
 
-            launchImage.loadImage(data.rocket.imageURL)
+            data.rocket?.imageURL?.let { launchImage.loadImage(it) }
 
             titleText.text = data.name
             descText.text = data.getDescription()
 
             // check if less than 30 days
             val netDate = ModelConsts.parseLaunchDate(data.net)
-            dateText.text = if (Date().time + 30 * 24 * 3600 * 1000L < netDate.time) {
+            dateText.text = if (Date().time + 24 * 3600 * 1000L < netDate.time) {
                 ModelConsts.formatLaunchDate(netDate)
             } else {
                 ModelConsts.formatToRemaining(netDate)

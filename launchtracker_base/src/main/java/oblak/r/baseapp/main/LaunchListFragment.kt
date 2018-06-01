@@ -6,6 +6,8 @@ import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
 import com.mikepenz.fastadapter.IItem
 import com.mikepenz.fastadapter.adapters.ItemAdapter
+import com.mikepenz.fastadapter_extensions.items.ProgressItem
+import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener
 import oblak.r.baseapp.base.BaseFragment
 import oblak.r.baseapp.models.Launch
 import oblak.r.launchtracker.base.R
@@ -29,11 +31,26 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
 
     private val itemAdapter by lazy { ItemAdapter<LaunchItem>() }
 
-    private val adapter by lazy { FastAdapter.with<IItem<*, *>, IAdapter<out IItem<*, *>>>(itemAdapter) }
+    private val footerAdapter by lazy { ItemAdapter<IItem<*, *>>() }
+
+    private val adapter by lazy { FastAdapter.with<IItem<*, *>, IAdapter<out IItem<*, *>>>(listOf(itemAdapter, footerAdapter)) }
 
     override fun initUI() {
         super.initUI()
         recycler.adapter = adapter
+
+        recycler.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
+            override fun onLoadMore(currentPage: Int) {
+                footerAdapter.clear()
+                footerAdapter.add(ProgressItem().withEnabled(false))
+
+                compositeDisposable += viewModel.getNextLaunches()
+                        .subscribe {
+                            footerAdapter.clear()
+                            addNextItems(it)
+                        }
+            }
+        })
 
         timerTask?.cancel()
         timerTask = object: TimerTask() {
@@ -48,9 +65,9 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
     }
 
     override fun requestData() {
-        // observer the launches
+        // observe the launches
         compositeDisposable += viewModel.getLaunches()
-                .subscribe { resetAdapter(it) }
+                .subscribe { setNewItems(it) }
 
         // observe the readiness state
         compositeDisposable += viewModel.getLaunchesState()
@@ -66,9 +83,13 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
         timerTask?.cancel()
     }
 
-    private fun resetAdapter(items: List<Launch>) {
+    private fun addNextItems(items: List<Launch>) {
+        itemAdapter.add(items.toAdapterItems())
+    }
 
-        itemAdapter.set(items.map { LaunchItem(it) })
+    private fun setNewItems(items: List<Launch>) {
+
+        itemAdapter.set(items.toAdapterItems())
 
         if (items.isEmpty()) {
             showEmpty("No launches available")
@@ -76,4 +97,6 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
             showContent()
         }
     }
+
+    private fun List<Launch>.toAdapterItems() = map { LaunchItem(it) }
 }

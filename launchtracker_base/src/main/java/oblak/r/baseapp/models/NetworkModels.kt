@@ -19,7 +19,7 @@ class Launch(
 
         val status: Int,
 
-        val rocket: Rocket,
+        val rocket: Rocket?,
 
         val vidURLs: List<String>,
 

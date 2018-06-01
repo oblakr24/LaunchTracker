@@ -16,25 +16,41 @@ import oblak.r.baseapp.utils.ModelConsts
  */
 class LaunchesViewModel(app: Application) : ViewModelWithService(app) {
 
-    private val maxNextLaunches = 30
+    private var offset = 0
+
+    private val maxNextLaunches = 20
     private val selectedRocket: BehaviorSubject<DisplayableRocket> = BehaviorSubject.create<DisplayableRocket>()
     private val newLaunchesReady: BehaviorSubject<Boolean> = BehaviorSubject.create()
+
+    private fun getLaunchesObservable() =
+        service.getNextLaunches(maxNextLaunches, offset, selectedRocket.value.familyName.takeIf { it != ModelConsts.allRocketObj.familyName })
+                .onErrorReturn { LaunchesResponse(emptyList()) }
+                .map { it.launches }
+                .doOnNext {
+                    offset += it.size
+                    newLaunchesReady.onNext(true)
+                }
+
+    fun getNextLaunches(): Observable<List<Launch>> {
+        return getLaunchesObservable()
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
+    }
 
     fun getLaunches(): Observable<List<Launch>> {
         // observe the selected rocket
         return selectedRocket
                 .observeOn(Schedulers.computation())
-                .doOnEach { newLaunchesReady.onNext(false) }
+                .doOnEach {
+                    offset = 0
+                    newLaunchesReady.onNext(false)
+                }
                 .flatMap {
-            // get the rocket details to get the rocket family name
-            service.getNextLaunches(maxNextLaunches, it.familyName.takeIf { it != ModelConsts.allRocketObj.familyName })
-                    .onErrorReturn { LaunchesResponse(emptyList()) }
-                    .map { it.launches }
-
-            }.doOnNext { newLaunchesReady.onNext(true) }
-            .subscribeOn(Schedulers.computation())
-            .observeOn(AndroidSchedulers.mainThread())
-
+                    // get the rocket details to get the rocket family name
+                    getLaunchesObservable()
+                }
+                .subscribeOn(Schedulers.computation())
+                .observeOn(AndroidSchedulers.mainThread())
     }
 
     fun getRockets(): Observable<List<DisplayableRocket>> {
