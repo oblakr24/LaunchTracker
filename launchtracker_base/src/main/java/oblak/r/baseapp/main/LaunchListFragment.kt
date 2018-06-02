@@ -1,6 +1,5 @@
 package oblak.r.baseapp.main
 
-import android.support.v7.widget.LinearLayoutManager
 import android.support.v7.widget.RecyclerView
 import com.mikepenz.fastadapter.FastAdapter
 import com.mikepenz.fastadapter.IAdapter
@@ -10,8 +9,10 @@ import com.mikepenz.fastadapter_extensions.items.ProgressItem
 import com.mikepenz.fastadapter_extensions.scroll.EndlessRecyclerOnScrollListener
 import oblak.r.baseapp.base.BaseFragment
 import oblak.r.baseapp.models.Launch
+import oblak.r.baseapp.utils.VerticalSpaceItemDecoration
 import oblak.r.launchtracker.base.R
 import org.jetbrains.anko.find
+import org.jetbrains.anko.support.v4.dip
 import java.util.*
 
 /**
@@ -23,9 +24,7 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
 
     override val viewModelClass: Class<LaunchesViewModel> = LaunchesViewModel::class.java
 
-    private val recycler by lazy { layout.find<RecyclerView>(R.id.recycler_launches).apply {
-        layoutManager = LinearLayoutManager(this@LaunchListFragment.context, LinearLayoutManager.VERTICAL, false)
-    } }
+    private val recycler by lazy { layout.find<RecyclerView>(R.id.recycler_launches) }
 
     private var timerTask: TimerTask? = null
 
@@ -33,24 +32,26 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
 
     private val footerAdapter by lazy { ItemAdapter<IItem<*, *>>() }
 
-    private val adapter by lazy { FastAdapter.with<IItem<*, *>, IAdapter<out IItem<*, *>>>(listOf(itemAdapter, footerAdapter)) }
+    private val adapter by lazy {
+        FastAdapter.with<IItem<*, *>, IAdapter<out IItem<*, *>>>(listOf(itemAdapter, footerAdapter))
+                .withOnClickListener { _, _, item, position ->
+                    (item as? LaunchItem)?.let { onItemClicked(it, position) }
+                    false
+                }
+    }
+
+    private var scrollListener: EndlessRecyclerOnScrollListener? = null
+
+    private fun onItemClicked(item: LaunchItem, position: Int) {
+        item.expanded = !item.expanded
+        adapter.notifyAdapterItemChanged(position)
+    }
 
     override fun initUI() {
         super.initUI()
         recycler.adapter = adapter
 
-        recycler.addOnScrollListener(object : EndlessRecyclerOnScrollListener(footerAdapter) {
-            override fun onLoadMore(currentPage: Int) {
-                footerAdapter.clear()
-                footerAdapter.add(ProgressItem().withEnabled(false))
-
-                compositeDisposable += viewModel.getNextLaunches()
-                        .subscribe {
-                            footerAdapter.clear()
-                            addNextItems(it)
-                        }
-            }
-        })
+        recycler.addItemDecoration(VerticalSpaceItemDecoration(dip(3)))
 
         timerTask?.cancel()
         timerTask = object: TimerTask() {
@@ -90,6 +91,24 @@ class LaunchListFragment : BaseFragment<LaunchesViewModel>() {
     private fun setNewItems(items: List<Launch>) {
 
         itemAdapter.set(items.toAdapterItems())
+
+        scrollListener?.let { recycler.removeOnScrollListener(it) }
+        scrollListener = object : EndlessRecyclerOnScrollListener(footerAdapter) {
+            override fun onLoadMore(currentPage: Int) {
+                footerAdapter.clear()
+                footerAdapter.add(ProgressItem().withEnabled(false))
+
+                compositeDisposable += viewModel.getNextLaunches()
+                        .subscribe {
+                            footerAdapter.clear()
+                            addNextItems(it)
+                        }
+            }
+        }
+
+        recycler.scrollToPosition(0)
+
+        recycler.addOnScrollListener(scrollListener)
 
         if (items.isEmpty()) {
             showEmpty("No launches available")

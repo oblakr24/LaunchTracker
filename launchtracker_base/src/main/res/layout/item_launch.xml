@@ -4,23 +4,25 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/item_launch"
     android:layout_width="match_parent"
-    android:layout_height="130dp"
+    android:layout_height="90dp"
+    android:foreground="?attr/selectableItemBackgroundBorderless"
+    android:elevation="0dp"
+    android:layout_marginTop="3dp"
     android:layout_marginBottom="3dp"
-    android:background="@color/app_gray_transparent" >
-
+    android:background="@color/gray_very_light" >
 
     <ImageView
         android:id="@+id/image_launch"
-        android:layout_width="60dp"
+        android:layout_width="70dp"
         android:layout_height="0dp"
         android:layout_marginBottom="8dp"
         android:layout_marginStart="8dp"
         android:layout_marginTop="8dp"
-        android:scaleType="center"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        app:srcCompat="@mipmap/ic_launcher" />
+        app:srcCompat="@mipmap/ic_launcher_launches" />
 
     <TextView
         android:id="@+id/text_launch_date"
@@ -34,19 +36,31 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
 
+    <ImageView
+        android:id="@+id/flag_icon"
+        android:layout_width="20dp"
+        android:layout_height="15dp"
+        android:adjustViewBounds="true"
+        tools:srcCompat="@mipmap/ic_launcher_launches"
+        app:layout_constraintLeft_toRightOf="@id/image_launch"
+        android:layout_marginStart="16dp"
+        android:layout_marginTop="8dp"
+        app:layout_constraintTop_toTopOf="parent"
+        />
+
     <TextView
         android:id="@+id/text_launch_title"
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
-        android:layout_marginStart="16dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="8dp"
         android:maxLines="3"
         android:text="Launch title"
         android:textSize="12sp"
         android:textStyle="bold|italic"
-        app:layout_constraintEnd_toStartOf="@+id/text_launch_date"
-        app:layout_constraintStart_toEndOf="@+id/image_launch"
+        app:layout_constraintEnd_toStartOf="@id/text_launch_date"
+        app:layout_constraintStart_toEndOf="@id/flag_icon"
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
@@ -55,15 +69,15 @@
         android:layout_height="0dp"
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
-        android:layout_marginEnd="8dp"
+        android:layout_marginEnd="12dp"
         android:layout_marginStart="16dp"
         android:textSize="12sp"
         android:ellipsize="end"
-        android:maxLines="3"
+        android:maxLines="2"
         android:text="Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum."
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/image_launch"
-        app:layout_constraintTop_toBottomOf="@+id/text_launch_title" />
+        app:layout_constraintStart_toEndOf="@id/image_launch"
+        app:layout_constraintTop_toBottomOf="@id/text_launch_title" />
 
 </android.support.constraint.ConstraintLayout>

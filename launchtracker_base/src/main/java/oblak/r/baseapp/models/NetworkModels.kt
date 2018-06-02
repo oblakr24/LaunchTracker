@@ -23,7 +23,9 @@ class Launch(
 
         val vidURLs: List<String>,
 
-        val missions: List<Mission>?
+        val missions: List<Mission>?,
+
+        val lsp: LaunchServiceProvider? = null
 ) {
 
     /**
@@ -31,6 +33,11 @@ class Launch(
      */
     fun getDescription(): String = missions?.firstOrNull()?.description ?: "-"
 }
+
+class LaunchServiceProvider(
+        val name: String,
+        val countryCode: String
+)
 
 class Mission(
         val id: Int,

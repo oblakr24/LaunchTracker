@@ -14,6 +14,11 @@ import android.widget.ImageView
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 
+object ImageConsts {
+    val ASSET_PATH = "file:///android_asset/"
+    val FLAGS_DIR = "flags/"
+}
+
 fun ViewGroup.inflateChild(resourceId: Int, attach: Boolean = false): View {
     return LayoutInflater.from(context).inflate(resourceId, this, attach)
 }
@@ -23,6 +28,14 @@ fun ImageView.loadImage(url: String) {
             .load(url)
             .transition(DrawableTransitionOptions.withCrossFade())
             .into(this)
+}
+
+fun ImageView.loadCountryFlag(countryCode: String) {
+    if (countryCode.isBlank()) {
+        return
+    }
+    val flagPath = "${ImageConsts.ASSET_PATH}${ImageConsts.FLAGS_DIR}$countryCode.png"
+    loadImage(flagPath)
 }
 
 /**
