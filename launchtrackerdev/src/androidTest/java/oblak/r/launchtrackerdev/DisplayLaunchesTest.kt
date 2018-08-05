@@ -30,7 +30,7 @@ class DisplayLaunchesTest {
                 .perform(click())
     }
 
-    private fun checkSpinnerItemCount(expectedCount: Int) {
+    private fun checkRecyclerViewCount(expectedCount: Int) {
         onView(withId(R.id.recycler_launches))
                 .check(withCount(expectedCount))
     }
@@ -41,15 +41,15 @@ class DisplayLaunchesTest {
     @Test
     fun changeSelectedRocket() {
         clickSpinnerItem(0)
-        checkSpinnerItemCount(3)
+        checkRecyclerViewCount(3)
 
         clickSpinnerItem(1)
-        checkSpinnerItemCount(1)
+        checkRecyclerViewCount(1)
 
         clickSpinnerItem(2)
-        checkSpinnerItemCount(1)
+        checkRecyclerViewCount(1)
 
         clickSpinnerItem(3)
-        checkSpinnerItemCount(1)
+        checkRecyclerViewCount(1)
     }
 }
